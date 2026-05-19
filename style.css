@@ -30,6 +30,71 @@ body {
     color: var(--dark);
     line-height: 1.6;
     overflow-x: hidden;
+    padding-top: 100px;
+}
+
+.page-header {
+    width: 100%;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(19, 19, 146, 0.95);
+    box-shadow: 0 4px 20px rgba(15, 15, 112, 0.411);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    height: 100px;
+    transition: background 0.3s ease, backdrop-filter 0.3s ease;
+    backdrop-filter: blur(6px);
+}
+
+.page-header.scrolled {
+    background: rgba(19, 19, 146, 0.75);
+}
+
+.header-left {
+    position: relative;
+    z-index: 2;
+}
+
+.header-logo-circle {
+    width: 110px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.page-header-image {
+    max-width: 100px;
+    width: 100px;
+    height: 90px;
+    display: block;
+    position: relative;
+    z-index: 2;
+}
+
+.header-nav {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    z-index: 2;
+}
+
+.header-nav a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.header-nav a:hover {
+    color: var(--secondary-light);
 }
 
 .container {
@@ -224,6 +289,11 @@ section {
     position: relative;
 }
 
+.projeto {
+    background: linear-gradient(180deg, var(--light) 0%, var(--white) 100%);
+    position: relative;
+}
+
 .sobre-content {
     max-width: 800px;
     margin: 0 auto;
@@ -236,6 +306,41 @@ section {
     color: var(--gray);
     line-height: 1.8;
     margin-bottom: 2rem;
+}
+
+.sobre-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+    text-align: left;
+}
+
+.detail-card,
+.project-card {
+    background: var(--white);
+    padding: 1.75rem;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.detail-card h3,
+.project-card h3 {
+    margin-bottom: 1rem;
+    color: var(--primary);
+    font-size: 1.25rem;
+}
+
+.detail-card p,
+.project-card p {
+    color: var(--gray);
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+}
+
+.project-card p:last-child {
+    margin-bottom: 0;
 }
 
 .sobre-stats {
@@ -364,6 +469,7 @@ section {
 .form-group input[type="text"],
 .form-group input[type="email"],
 .form-group input[type="tel"],
+.form-group input[type="number"],
 .form-group textarea {
     width: 100%;
     padding: 0.75rem 1rem;

@@ -2,7 +2,8 @@
 const form = document.getElementById('form-inscricao');
 const successMessage = document.getElementById('success-message');
 
-form.addEventListener('submit', (e) => {
+if (form) {
+    form.addEventListener('submit', (e) => {
     e.preventDefault();
 
     // Limpar mensagens anteriores
@@ -12,6 +13,8 @@ form.addEventListener('submit', (e) => {
     // Validar campos
     const nome = document.getElementById('nome').value.trim();
     const email = document.getElementById('email').value.trim();
+    const idade = document.getElementById('idade').value.trim();
+    const contribuicao = document.getElementById('contribuicao').value.trim();
     const interesses = document.querySelectorAll('input[name="interesse"]:checked');
 
     let isValid = true;
@@ -32,6 +35,27 @@ form.addEventListener('submit', (e) => {
     } else if (!validateEmail(email)) {
         showError('email', 'Email inválido');
         isValid = false;
+    } else if (isEmailRegistered(email)) {
+        showError('email', 'Este email já foi usado.');
+        isValid = false;
+    }
+
+    // Validação de idade
+    if (!idade) {
+        showError('idade', 'Idade é obrigatória');
+        isValid = false;
+    } else if (isNaN(Number(idade)) || Number(idade) < 16 || Number(idade) > 99) {
+        showError('idade', 'Informe uma idade entre 16 e 99 anos');
+        isValid = false;
+    }
+
+    // Validação de contribuição
+    if (!contribuicao) {
+        showError('contribuicao', 'Diga como você quer contribuir');
+        isValid = false;
+    } else if (contribuicao.length < 5) {
+        showError('contribuicao', 'Descreva em pelo menos 5 caracteres');
+        isValid = false;
     }
 
     // Validação de interesses
@@ -40,13 +64,24 @@ form.addEventListener('submit', (e) => {
         isValid = false;
     }
 
-    // Se tudo válido, mostrar mensagem de sucesso
+    // Se tudo válido, salvar login e mostrar mensagem de sucesso
     if (isValid) {
+        saveVolunteer({
+            nome,
+            email,
+            idade,
+            contribuicao,
+            telefone: document.getElementById('telefone').value.trim(),
+            interesses: Array.from(interesses).map((input) => input.value),
+            mensagem: document.getElementById('mensagem').value.trim(),
+            criadoEm: new Date().toISOString(),
+        });
         showSuccessMessage(nome);
         form.reset();
         scrollToElement('success-message');
     }
 });
+}
 
 // Função para validar email
 function validateEmail(email) {
@@ -75,6 +110,23 @@ function showSuccessMessage(nome) {
     const message = `✅ Obrigado, ${nome}! Sua inscrição foi recebida com sucesso. Em breve entraremos em contato!`;
     successMessage.textContent = message;
     successMessage.style.animation = 'fadeInUp 0.5s ease-out';
+}
+
+// Funções de armazenamento local
+function getStoredVolunteers() {
+    const stored = localStorage.getItem('voluntarios');
+    return stored ? JSON.parse(stored) : [];
+}
+
+function saveVolunteer(volunteer) {
+    const volunteers = getStoredVolunteers();
+    volunteers.push(volunteer);
+    localStorage.setItem('voluntarios', JSON.stringify(volunteers));
+}
+
+function isEmailRegistered(email) {
+    const volunteers = getStoredVolunteers();
+    return volunteers.some((volunteer) => volunteer.email.toLowerCase() === email.toLowerCase());
 }
 
 // ===== SCROLL SUAVE ENTRE SEÇÕES =====
@@ -132,6 +184,21 @@ inputs.forEach((input) => {
         input.parentElement.classList.remove('focused');
     });
 });
+
+// ===== TRANSPARÊNCIA DO HEADER AO SCROLL =====
+function updateHeaderOpacity() {
+    const pageHeader = document.querySelector('.page-header');
+    if (!pageHeader) return;
+
+    if (window.scrollY > 20) {
+        pageHeader.classList.add('scrolled');
+    } else {
+        pageHeader.classList.remove('scrolled');
+    }
+}
+
+window.addEventListener('scroll', updateHeaderOpacity);
+window.addEventListener('load', updateHeaderOpacity);
 
 // ===== INICIALIZAÇÃO =====
 console.log('🤝 Site de Voluntariado carregado com sucesso!');
